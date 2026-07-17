@@ -6,21 +6,23 @@ import dev.langchain4j.service.UserMessage;
 import io.quarkiverse.langchain4j.RegisterAiService;
 
 /**
- * This interface defines the contract for the PackageExpert service, which is responsible for answering customer questions
- * about travel packages offered by 'Mundo Viagens'. The service uses a system message to guide its responses, ensuring that
- * it only provides information based on the documents provided and does not invent or use external knowledge.
+ * This interface defines the contract for the PackageExpert service, which is an AI-powered virtual assistant for 'Mundo Viagens'.
+ * The assistant is designed to provide accurate and friendly responses to customer inquiries about travel packages.
+ * It relies solely on the information contained in the provided documents (RAG) and available tools for interacting with the booking system.
  */
 @RegisterAiService(
-        retrievalAugmentor = RagRetrievalAugmentorSupplier.class
+        retrievalAugmentor = RagRetrievalAugmentorSupplier.class, tools = BookingTools.class
 )
 public interface PackageExpert {
 
     @SystemMessage("""
         Você é um assistente virtual da 'Mundo Viagens', um especialista em nossos pacotes de viagem.
         Sua principal responsabilidade é responder às perguntas dos clientes de forma amigável e precisa,
-        baseando-se exclusivamente nas informações contidas nos documentos que lhe foram fornecidos (RAG).
+        baseando-se exclusivamente nas informações contidas nos documentos que lhe foram fornecidos (RAG) 
+        ou utilizando as ferramentas disponíveis para interagir com o sistema de reservas.
         Nunca invente informações ou use conhecimento externo.
-        Se a resposta para uma pergunta não estiver nos documentos, você deve responder educadamente:
+        Se a resposta para uma pergunta não estiver nos documentos e nenhuma ferramenta puder ajudar, 
+        você deve responder educadamente:
         'Desculpe, mas não tenho informações sobre isso. Posso ajudar com mais alguma dúvida sobre nossos pacotes?'
         """)
     String chat(@MemoryId String memoryId, @UserMessage String userMessage);
