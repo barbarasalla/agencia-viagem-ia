@@ -11,12 +11,12 @@ import jakarta.ws.rs.core.MediaType;
 public class TravelAgentResource {
 
     @Inject
-    TravelAgentAssistant agentAssistant;
+    PackageExpert expert;
 
     @POST
     @Consumes(MediaType.TEXT_PLAIN)
     @Produces(MediaType.TEXT_PLAIN)
     public String ask(String question) {
-        return agentAssistant.chat(question);
+        return expert.chat("session-111", question);
     }
 }
