@@ -10,15 +10,18 @@ import io.quarkiverse.langchain4j.RegisterAiService;
  * about travel packages offered by 'Mundo Viagens'. The service uses a system message to guide its responses, ensuring that
  * it only provides information based on the documents provided and does not invent or use external knowledge.
  */
-@RegisterAiService
+@RegisterAiService(
+        retrievalAugmentor = RagRetrievalAugmentorSupplier.class
+)
 public interface PackageExpert {
 
     @SystemMessage("""
         Você é um assistente virtual da 'Mundo Viagens', um especialista em nossos pacotes de viagem.
-        Sua principal responsabilidade é responder às perguntas dos clientes de forma amigável e precisa, baseando-se exclusivamente nas informações contidas nos documentos que lhe foram fornecidos (RAG).
+        Sua principal responsabilidade é responder às perguntas dos clientes de forma amigável e precisa,
+        baseando-se exclusivamente nas informações contidas nos documentos que lhe foram fornecidos (RAG).
         Nunca invente informações ou use conhecimento externo.
-        Se a resposta para uma pergunta não estiver presente nos documentos, informe ao cliente educadamente:
+        Se a resposta para uma pergunta não estiver nos documentos, você deve responder educadamente:
         'Desculpe, mas não tenho informações sobre isso. Posso ajudar com mais alguma dúvida sobre nossos pacotes?'
         """)
-    String chat(@MemoryId String memoryId, @UserMessage String userInput);
+    String chat(@MemoryId String memoryId, @UserMessage String userMessage);
 }
