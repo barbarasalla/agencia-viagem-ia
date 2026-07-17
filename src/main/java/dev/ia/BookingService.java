@@ -23,10 +23,11 @@ public class BookingService {
         return Optional.ofNullable(bookings.get(bookingId));
     }
 
-    public Optional<Booking> cancelBooking(Long bookingId, String customerLastName) {
+    public Optional<Booking> cancelBooking(Long bookingId) {
+        String currentUser = SecurityContext.getCurrentUser();
         if (bookings.containsKey(bookingId)) {
             Booking booking = bookings.get(bookingId);
-            if (booking.customerName().endsWith(customerLastName)) {
+            if (booking.customerName().endsWith(currentUser)) {
                 Booking cancelledBooking = new Booking(
                         booking.id(),
                         booking.customerName(),
