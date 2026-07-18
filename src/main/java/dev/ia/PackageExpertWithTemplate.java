@@ -7,14 +7,15 @@ import io.quarkiverse.langchain4j.RegisterAiService;
 import io.quarkiverse.langchain4j.mcp.runtime.McpToolBox;
 
 /**
- * This interface defines the contract for the PackageExpert service, which is an AI-powered virtual assistant for 'Mundo Viagens'.
+ * This interface defines the contract for the PackageExpertWithTemplate service, which is an AI-powered virtual assistant for 'Mundo Viagens'.
  * The assistant is designed to provide accurate and friendly responses to customer inquiries about travel packages.
  * It relies solely on the information contained in the provided documents (RAG) and available tools for interacting with the booking system.
+ * The chat method uses a template to format the user message and includes the username for authentication purposes.
  */
 @RegisterAiService(
         retrievalAugmentor = RagRetrievalAugmentorSupplier.class
 )
-public interface PackageExpert {
+public interface PackageExpertWithTemplate {
 
     @SystemMessage("""
         Você é um assistente virtual da 'Mundo Viagens', um especialista em nossos pacotes de viagem.
@@ -27,5 +28,6 @@ public interface PackageExpert {
         'Desculpe, mas não tenho informações sobre isso. Posso ajudar com mais alguma dúvida sobre nossos pacotes?'
         """)
     @McpToolBox("booking-server")
-    String chat(@MemoryId String memoryId, @UserMessage String userMessage);
+    @UserMessage("Do what user is asking {message}. The user used for authentication is {username}.")
+    String chat(@MemoryId String memoryId, String message, String username);
 }
